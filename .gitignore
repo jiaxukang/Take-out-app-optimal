@@ -8,7 +8,7 @@ rebel.xml
 target/
 .DS_Store
 offline_user.md
-
+src/main/java/resources/application.yml
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
