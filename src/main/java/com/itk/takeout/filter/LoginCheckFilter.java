@@ -32,6 +32,8 @@ public class LoginCheckFilter implements Filter {
                 "/employee/logout",
                 "/backend/**",
                 "/front/**",
+                "/takeout/**",
+                "/takeout-admin/**",
                 "/user/sendMsg",
                 "/user/login"
         };

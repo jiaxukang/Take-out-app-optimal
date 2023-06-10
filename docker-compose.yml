@@ -1,7 +1,19 @@
-version: "3.2"
+version: "3.8"
 
 services:
+  cache:
+    image: redis:7.2-rc
+    container_name: myredis
+    restart: always
+    volumes:
+      - "$PWD/redis/config/redis.conf:/etc/redis/redis.conf"
+      - "$PWD/redis/data/:/data"
+    command: /bin/sh -c "echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf
+      && redis-server /etc/redis/redis.conf --appendonly yes"
+    privileged: true
+    ports:
+      - "6379:6379"
   takeout:
     build: .
     ports:
-      - "8080:8080"
+      - "80:8080"

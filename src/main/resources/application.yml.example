@@ -9,14 +9,23 @@ spring:
       url: jdbc:mysql://your database url
       username: your database username
       password: your database password
+  redis:
+    host: xxxx
+    port: xxx
+    database: xx
+    password: xx
+  cache:
+    redis:
+      time-to-live: 1800000  # 30 minutes
 mybatis-plus:
   configuration:
-    #在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射
+
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
       id-type: ASSIGN_ID
+
 #amazon:
 #  s3bucket:
 #    bucketName: xx

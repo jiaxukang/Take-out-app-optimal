@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +33,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/dish")
 @Slf4j
 public class DishController {
-    @Autowired
-    private DishFlavorService dishFlavorService;
 
     @Autowired
     private DishService dishService;
@@ -40,8 +40,6 @@ public class DishController {
     @Autowired
     private CategoryService categoryService;
 
-    @Autowired
-    private RedisTemplate redisTemplate;
 
     /**
      * add dish
@@ -49,14 +47,11 @@ public class DishController {
      * @return
      */
     @PostMapping
+    @CacheEvict(value = "dishCache",allEntries = true)
     public R<String> save(@RequestBody DishDto dishDto){
         log.info(dishDto.toString());
 
         dishService.saveWithFlavor(dishDto);
-
-        // delete cache
-        Set key = redisTemplate.keys("dish_*");
-        redisTemplate.delete(key);
 
         return R.success("save success!");
     }
@@ -121,15 +116,11 @@ public class DishController {
      * @return
      */
     @PutMapping
+    @CacheEvict(value = "dishCache",allEntries = true)
     public R<String> update(@RequestBody DishDto dishDto){
         log.info(dishDto.toString());
 
         dishService.updateWithFlavor(dishDto);
-
-        // delete cache
-        Set key = redisTemplate.keys("dish_*");
-        redisTemplate.delete(key);
-
 
         return R.success("save success!");
     }
@@ -140,11 +131,8 @@ public class DishController {
      * @return
      */
     @PostMapping("status/{status}")
+    @CacheEvict(value = "dishCache",allEntries = true)
     public R<String> status(@PathVariable int status, @RequestParam("ids") String ids){
-        // delete cache
-        Set key = redisTemplate.keys("dish_*");
-        redisTemplate.delete(key);
-
         String[] list = ids.split(",");
         for(String id: list){
             Dish dish = dishService.getById(id);
@@ -165,8 +153,10 @@ public class DishController {
      * @return
      */
     @DeleteMapping
+    @CacheEvict(value = "dishCache",allEntries = true)
     public R<String> delete(@RequestParam List<Long> ids){
         log.info("delete +{}", ids);
+
         dishService.remove(ids);
 
 
@@ -179,18 +169,9 @@ public class DishController {
      * @return
      */
     @GetMapping("/list")
+    @Cacheable(value = "dishCache",key = "#dish.CategoryId + '_' + #dish.status")
     public R<List<DishDto>> list(DishDto dish){
         List<DishDto> dishDtoList =null;
-        // get cache data
-        String key = "dish"+dish.getCategoryId()+"_"+dish.getStatus();
-        dishDtoList = (List<DishDto>)redisTemplate.opsForValue().get(key);
-
-        // if get data, return
-        if (dishDtoList!=null){
-            return R.success(dishDtoList);
-        }
-
-        //if not, store it to cache
         LambdaQueryWrapper<Dish> lambdaQueryWrapper = new LambdaQueryWrapper<>();
 
         lambdaQueryWrapper.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
@@ -207,8 +188,6 @@ public class DishController {
             BeanUtils.copyProperties(item,dishDto);
             return dishDto;
         }).collect(Collectors.toList());
-
-        redisTemplate.opsForValue().set(key,dishDtoList,60, TimeUnit.MINUTES);
 
         return R.success(dishDtoList);
     }
