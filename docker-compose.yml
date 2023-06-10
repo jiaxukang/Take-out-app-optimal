@@ -1,0 +1,7 @@
+version: "3.2"
+
+services:
+  takeout:
+    build: .
+    ports:
+      - "8080:8080"
