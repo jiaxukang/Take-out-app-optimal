@@ -11,7 +11,7 @@ This is client page, you should open it use mobile or set your browse size to ph
 
 The test account is test, password is 123456
 
-http://ec2-16-50-171-207.ap-southeast-4.compute.amazonaws.com/take/index.html
+http://ec2-16-50-171-207.ap-southeast-4.compute.amazonaws.com/takeout/index.html
 
 # How to use by local server
 - copy all file to your local machine
