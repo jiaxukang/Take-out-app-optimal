@@ -8,10 +8,15 @@ Mobile users can register an account and login, browse dishes, set delivery addr
 The back-end management page can manage staff accounts, manage dishes and flavors, and manage orders.
 # get the test demo
 This is client page, you should open it use mobile or set your browse size to phone size
+,The test account is test, password is 123456
 
-The test account is test, password is 123456
+http://16.50.171.207/takeout/index.html
 
-http://ec2-16-50-171-207.ap-southeast-4.compute.amazonaws.com/takeout/index.html
+This is backend administrator system, please do not change any information:
+
+http://16.50.171.207/takeout-admin/index.html
+
+
 
 # How to use by local server
 - copy all file to your local machine
