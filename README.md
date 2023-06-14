@@ -10,11 +10,11 @@ The back-end management page can manage staff accounts, manage dishes and flavor
 This is client page, you should open it use mobile or set your browse size to phone size
 ,The test account is "test", password is "123456"
 
-http://16.50.171.207/takeout/index.html
+http://takeout.codekang.live/takeout/index.html
 
 This is backend administrator system, please do not change any information:
 
-http://16.50.171.207/takeout-admin/index.html
+http://takeout.codekang.live/takeout-admin/index.html
 
 
 
